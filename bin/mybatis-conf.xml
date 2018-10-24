@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="dbconfig.properties"></properties>
+	<typeHandlers>
+		<!-- 1.配置我们自定义的 TypeHandler -->
+		<typeHandler handler="com.lmg.mybatis.typehandler.MyEnumEmpStatusTypeHandler" javaType="com.lmg.mybatis.bean.EmpStatus"/>
+		<!-- 2.也可以在处理某个字段的时候告诉MyBatis用声明类型处理器
+				保存:#{empStatus,typeHandler=xxxx}
+				查询:
+				<resultMap type="com.lmg.mybatis.bean.Employee" id="MyEmp">
+				  	<id column="id" property="id"/>
+				  	<result column="empStatus" property="empStatus" typeHandler=""/>
+				</resultMap>
+				注意:如果在参数位置修改TypeHandler,应该保证保存数据和查询数据用的TypeHandler是一样的。
+		 -->
+	</typeHandlers>
+   <plugins>
+   	<plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+   </plugins>
+  <environments default="dev_mysql">
+    <environment id="dev_mysql">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/mybatis"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+      </dataSource>
+    </environment>
+      <environment id="dev_oracle">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <databaseIdProvider type="DB_VENDOR">
+  	<property name="MySQL" value="mysql"/>
+ 	<property name="Oracle" value="oracle"/>
+  </databaseIdProvider>
+  <mappers>
+    <mapper resource="EmployeeMapper.xml"/>
+  </mappers>
+</configuration>
